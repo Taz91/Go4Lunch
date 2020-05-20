@@ -1,4 +1,4 @@
-package com.syc.go4lunch.ui.slideshow;
+package com.syc.go4lunch.ui.map;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,19 +12,19 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.syc.go4lunch.R;
 
-public class SlideshowFragment extends Fragment {
+public class MapsFragment extends Fragment {
 
-    private SlideshowViewModel slideshowViewModel;
+    private MapsViewModel mapsViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
-        slideshowViewModel = ViewModelProviders.of(this).get(SlideshowViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
-        final TextView textView = root.findViewById(R.id.text_slideshow);
-        slideshowViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        mapsViewModel = ViewModelProviders.of(this).get(MapsViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_maps, container, false);
+        final TextView textMap = root.findViewById(R.id.text_map);
+        mapsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
 
-                textView.setText(s);
+                textMap.setText(s);
             }
         });
         return root;

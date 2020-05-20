@@ -1,19 +1,19 @@
-package com.syc.go4lunch.ui.home;
-
+package com.syc.go4lunch.ui.map;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class HomeViewModel extends ViewModel {
+public class MapsViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public HomeViewModel() {
+    public MapsViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("mon text à moi !!");
+        mText.setValue("my fucking map !!");
     }
 
     public LiveData<String> getText() {
+
         return mText;
     }
 }
