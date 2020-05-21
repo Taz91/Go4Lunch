@@ -9,7 +9,7 @@ public class MapsViewModel extends ViewModel {
 
     public MapsViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("my fucking map !!");
+        mText.setValue("Maps !!");
     }
 
     public LiveData<String> getText() {
