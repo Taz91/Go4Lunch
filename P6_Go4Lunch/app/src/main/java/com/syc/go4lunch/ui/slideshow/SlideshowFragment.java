@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
 import com.syc.go4lunch.R;
 
 public class SlideshowFragment extends Fragment {
@@ -27,6 +29,9 @@ public class SlideshowFragment extends Fragment {
                 textView.setText(s);
             }
         });
+
+        //Places.initialize(getContext(),);
+        
         return root;
     }
 }

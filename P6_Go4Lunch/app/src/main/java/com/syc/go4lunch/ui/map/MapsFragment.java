@@ -22,7 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import static com.syc.go4lunch.R.layout.fragment_maps;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
-
+// onCreateView d'origine,
 /*  onCreateView d'origine,
     private MapsViewModel mapsViewModel;
 
@@ -46,7 +46,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private MapView mapView;
 
     public MapsFragment(){}
-
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mapsViewModel = ViewModelProviders.of(this).get(MapsViewModel.class);
