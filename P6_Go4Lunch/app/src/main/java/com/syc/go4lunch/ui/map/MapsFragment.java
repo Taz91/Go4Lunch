@@ -41,7 +41,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 */
 
-    private GoogleMap googleMap;
+    private GoogleMap mMap;
     private MapsViewModel mapsViewModel;
     private MapView mapView;
 
@@ -58,6 +58,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 textMap.setText(s);
             }
         });
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         //SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(fragment_maps);  //(SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -79,12 +83,56 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        this.googleMap = googleMap;
+        //this.googleMap = googleMap;
 
         // Add a marker in Sydney and move the camera
+        //LatLng sydney = new LatLng(-34, 151);
+        //googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        //googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        mMap = googleMap;
+
+        // test remplissage via intent
+        /*
+        String title= "";
+        Intent mapsIntent = getIntent();
+        if(mapsIntent != null  ){
+            title = mapsIntent.getStringExtra("title");
+            LatLng sydney = new LatLng(mapsIntent.getDoubleExtra("latitude", -34),mapsIntent.getDoubleExtra("longitude", 151));
+            mMap.addMarker(new MarkerOptions().position(sydney).title(title));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        }
+        */
+
+        // Add a marker in Sydney and move the camera
+        /*
         LatLng sydney = new LatLng(-34, 151);
-        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+         mMap.addMarker( new MarkerOptions()
+                            .position(sydney)
+                            .title("Syc in Sydney")
+                            .draggable(true)
+                        );
+         */
+        LatLng chatelet = new LatLng(48.86, 2.34);
+        mMap.addMarker( new MarkerOptions()
+                .position(chatelet)
+                .title("Syc in Chatelet")
+                .draggable(true)
+        );
+        LatLng jardinLux = new LatLng(48.84, 2.337);
+        mMap.addMarker( new MarkerOptions()
+                .position(jardinLux)
+                .title("Syc in Jardin Luxembour")
+                .draggable(true)
+        );
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(chatelet));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(jardinLux));
+        // Set a preference for minimum and maximum zoom.
+        mMap.setMinZoomPreference(6.0f);
+        mMap.setMaxZoomPreference(14.0f);
+
+
     }
 
 }

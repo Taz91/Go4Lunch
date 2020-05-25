@@ -10,8 +10,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.syc.go4lunch.R;
 
 public class SlideshowFragment extends Fragment {
@@ -30,8 +35,23 @@ public class SlideshowFragment extends Fragment {
             }
         });
 
-        //Places.initialize(getContext(),);
-        
+        // ====================================== test google Places
+        // Initialize the sdk if necessary
+        if(!Places.isInitialized()){
+            Places.initialize(getContext(),getString(R.string.google_api_key));
+        }
+        // Create e new Places client instance
+        PlacesClient placesClient = Places.createClient(getContext());
+
+        //first method
+
+
+        AutocompleteSupportFragment autocompleteSupportFragment = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.places_autocomplete_fragment);
+
+        autocompleteSupportFragment.setTypeFilter(TypeFilter.ADDRESS);
+        autocompleteSupportFragment.setLocationBias(RectangularBounds.newInstance( new LatLng(48.86,2.34), new LatLng(48.84,2.34) ));
+        autocompleteSupportFragment.setCountry("IN");
+
         return root;
     }
 }
