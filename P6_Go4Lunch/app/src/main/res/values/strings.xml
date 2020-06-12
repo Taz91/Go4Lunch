@@ -16,4 +16,8 @@
     <string name="title_activity_maps">Map</string>
     <string name="menu_map">GoogleMaps</string>
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAWjNDgqEaMwKRfTTGJiFIvhJIBSWaXSxk</string>
+    <string name="connection_succeed">Firebase connection - Succeed </string>
+    <string name="error_authentication_canceled">Firebase connection - no response !</string>
+    <string name="error_no_internet">Firebase connection - no network !</string>
+    <string name="error_unknown_error">Firebase connection - unknown error !</string>
 </resources>

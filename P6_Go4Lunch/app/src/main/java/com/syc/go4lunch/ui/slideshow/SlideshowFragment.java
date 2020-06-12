@@ -46,10 +46,10 @@ public class SlideshowFragment extends Fragment {
         //first method
 
 
-        AutocompleteSupportFragment autocompleteSupportFragment = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.places_autocomplete_fragment);
+        AutocompleteSupportFragment autocompleteSupportFragment = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.places_autocomplete_fragment);
 
         autocompleteSupportFragment.setTypeFilter(TypeFilter.ADDRESS);
-        autocompleteSupportFragment.setLocationBias(RectangularBounds.newInstance( new LatLng(48.86,2.34), new LatLng(48.84,2.34) ));
+        autocompleteSupportFragment.setLocationBias(RectangularBounds.newInstance( new LatLng(48.75,2.34), new LatLng(48.84,2.34) ));
         autocompleteSupportFragment.setCountry("IN");
 
         return root;

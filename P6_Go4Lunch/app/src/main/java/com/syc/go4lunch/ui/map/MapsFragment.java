@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,24 +22,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import static com.syc.go4lunch.R.layout.fragment_maps;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
-// onCreateView d'origine,
-/*  onCreateView d'origine,
-    private MapsViewModel mapsViewModel;
-
-    public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
-        mapsViewModel = ViewModelProviders.of(this).get(MapsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_maps, container, false);
-        final TextView textMap = root.findViewById(R.id.text_map);
-        mapsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-
-                textMap.setText(s);
-            }
-        });
-        return root;
-    }
-*/
 
     private GoogleMap mMap;
     private MapsViewModel mapsViewModel;
@@ -48,7 +30,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public MapsFragment(){}
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mapsViewModel = ViewModelProviders.of(this).get(MapsViewModel.class);
+        mapsViewModel = new ViewModelProvider(this).get(MapsViewModel.class);
         View root = inflater.inflate(fragment_maps, container, false);
         final TextView textMap = root.findViewById(R.id.text_map);
         mapsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -61,12 +43,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        //SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(fragment_maps);  //(SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        //SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapView);
-        //mapFragment.getMapAsync(this);
 
         return root;
     }

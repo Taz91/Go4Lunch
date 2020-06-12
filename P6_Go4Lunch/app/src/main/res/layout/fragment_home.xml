@@ -7,32 +7,36 @@
     tools:context=".ui.home.HomeFragment">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="150dp"
         tools:ignore="MissingConstraints">
 
         <TextView
             android:id="@+id/login_texthome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:background="@color/cardview_shadow_start_color"
-            android:text="ce texte qu'on aime"
+            android:text="modify text hom"
             android:textAlignment="center"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="15dp"/>
-
-        <Button
-            android:id="@+id/login_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="50dp"
-            android:background="#FF4081"
-            android:layout_marginTop="15dp"
-            android:text="Login" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </LinearLayout>
+
+    <fragment
+        android:id="@+id/map_home"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="403dp"
+        android:layout_height="675dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.945"
+        tools:context=".ui.map.MapsFragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

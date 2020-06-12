@@ -1,18 +1,20 @@
-package com.syc.go4lunch.ui.home;
+package com.syc.go4lunch.ui.authentication;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class HomeViewModel extends ViewModel {
+public class AuthenticationViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public HomeViewModel() {
+    public AuthenticationViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("fragment _home : connexion sucess ");
+        mText.setValue("fragment authentification -- ");
     }
 
     public LiveData<String> getText() {
         return mText;
     }
+
 }
