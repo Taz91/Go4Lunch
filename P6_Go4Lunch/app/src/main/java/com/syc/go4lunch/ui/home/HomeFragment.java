@@ -1,5 +1,8 @@
 package com.syc.go4lunch.ui.home;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -9,20 +12,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.syc.go4lunch.R;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import java.util.Objects;
-import java.util.concurrent.Executor;
-
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -33,6 +31,8 @@ import butterknife.ButterKnife;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
+import static com.firebase.ui.auth.AuthUI.getApplicationContext;
+
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private HomeViewModel homeViewModel;
     private GoogleMap mMap;
@@ -41,9 +41,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private static final int RC_LOCATION_PERMS = 100;
 
     private FusedLocationProviderClient fusedLocationClient;
+    private LocationCallback GPSLocationCallback;
 
     @BindView(R.id.login_texthome) TextView loginTexthome;
-
 
 
     //FOR DATA // 1 - Identifier for Sign-In Activity
@@ -70,12 +70,28 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         mMap = googleMap;
 
-        updateLocationUI();
+        // with GoogleMap
+        // LocationRequest locationRequest = new LocationRequest().setInterval(10000).setFastestInterval(5000).setSmallestDisplacement(50).setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setSmallestDisplacement(50);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        fetchLastKnowLocation();
+        GPSLocationCallback = new LocationCallback(){
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                //super.onLocationResult(locationResult);
+                Location lastLocation = locationResult.getLocations().get(locationResult.getLocations().size());
+                Toast.makeText( getContext(),"Vous êtes ici: " + lastLocation.getLatitude() + " / " + lastLocation.getLatitude() + " (Nb locs : " + locationResult.getLocations().size() + " ) " , Toast.LENGTH_LONG).show();
+            }
+        };
+
+        //updateLocationUI();
+
+        //fetchLastKnowLocation();
 
 
 
@@ -163,8 +179,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             return;
         }
 
+        //fusedLocationClient  = LocationServices.getFusedLocationProviderClient(requireContext());
         fusedLocationClient  = LocationServices.getFusedLocationProviderClient(requireContext());
-
 
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {

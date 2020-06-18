@@ -8,6 +8,7 @@ import com.syc.go4lunch.MainActivity;
 import com.syc.go4lunch.R;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -17,22 +18,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
 import static android.app.Activity.RESULT_OK;
 
-public class AuthenticationFragment extends Fragment {
+public class AuthenticationFragment extends Fragment implements EasyPermissions.PermissionCallbacks {
 
     private AuthenticationViewModel authenticationViewModel;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private static final int RC_SIGN_IN = 123;
+    private static final int RC_PERMS_IN = 333;
 
     @BindView(R.id.authentication_message) TextView authentication_message;
-    @BindView(R.id.authentication_result) TextView authentification_result;
+    @BindView(R.id.authentication_result) TextView authentication_result;
 
     public static AuthenticationFragment newInstance() {
 
@@ -68,10 +74,25 @@ public class AuthenticationFragment extends Fragment {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE){
+
+        }
+
         // 4 - Handle SignIn Activity response on activity result
-        this.handleResponseAfterSignIn(requestCode, resultCode, data);
+        if(requestCode == RC_SIGN_IN){
+            this.handleResponseAfterSignIn(requestCode, resultCode, data);
+        }
+
     }
 
     // 3 - Method that handles response after SignIn Activity close
@@ -82,32 +103,45 @@ public class AuthenticationFragment extends Fragment {
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 // SUCCESS
-                authentification_result.setText(getString(R.string.connection_succeed));
+                authentication_result.setText(getString(R.string.connection_succeed));
                 openMainActivity();
 
             } else { // ERRORS
                 if (response == null) {
-                    authentification_result.setText(getString(R.string.error_authentication_canceled));
+                    authentication_result.setText(getString(R.string.error_authentication_canceled));
                 } else if (Objects.requireNonNull(response.getError()).getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    authentification_result.setText(getString(R.string.error_no_internet));
+                    authentication_result.setText(getString(R.string.error_no_internet));
                 } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                    authentification_result.setText(getString(R.string.error_unknown_error));
+                    authentication_result.setText(getString(R.string.error_unknown_error));
                 }
             }
         }
     }
 
+    /**
+     * launch activity authentication with firebase
+     */
     public void startConnect(){
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        permissionGranted();
 
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build()
                 // ,new AuthUI.IdpConfig.PhoneBuilder().build()
-                 ,new AuthUI.IdpConfig.GoogleBuilder().build()
+                ,new AuthUI.IdpConfig.GoogleBuilder().build()
                 // ,new AuthUI.IdpConfig.FacebookBuilder().build()
                 // ,new AuthUI.IdpConfig.TwitterBuilder().build()
                  );
+
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(providers)
+                        .build(),
+                RC_SIGN_IN);
+        /*
+        //mAuth = FirebaseAuth.getInstance();
+        //FirebaseUser currentUser = mAuth.getCurrentUser();
 
         if (currentUser != null ){
             String idUser = currentUser.getUid();
@@ -120,7 +154,30 @@ public class AuthenticationFragment extends Fragment {
                             .build(),
                     RC_SIGN_IN);
         }
+        */
+    }
 
+    @AfterPermissionGranted(RC_PERMS_IN)
+    public void permissionGranted(){
+        String[] perms = {Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET};
+        if(EasyPermissions.hasPermissions(getContext(),perms)){
+            Toast.makeText(getContext(), "y a le droit ?",Toast.LENGTH_LONG).show();;
+        }else{
+            EasyPermissions.requestPermissions(this,"besoin d'accorder une permission !!", RC_PERMS_IN, perms );
+        }
+
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        if(EasyPermissions.somePermissionPermanentlyDenied(this, perms )){
+            new AppSettingsDialog.Builder(this).build().show();
+        }
     }
 
     public void openMainActivity() {
