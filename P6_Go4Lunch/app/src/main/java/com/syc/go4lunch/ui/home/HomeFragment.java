@@ -91,7 +91,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         //updateLocationUI();
 
-        //fetchLastKnowLocation();
+        fetchLastKnowLocation();
 
 
 
@@ -114,7 +114,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         // Set a preference for minimum and maximum zoom.
         mMap.setMinZoomPreference(6.0f);
         mMap.setMaxZoomPreference(14.0f);
-
 
     }
 
@@ -162,10 +161,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         }
         */
     }
-
-
-
-
 
     // --------------------
     // GET LOCATION USER

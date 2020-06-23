@@ -20,4 +20,11 @@
     <string name="error_authentication_canceled">Firebase connection - no response !</string>
     <string name="error_no_internet">Firebase connection - no network !</string>
     <string name="error_unknown_error">Firebase connection - unknown error !</string>
+    <string name="need_permission_message">"Application need permission "</string>
+
+
+    <string name="facebook_app_id">283250972821458</string>
+    <string name="fb_login_protocol_scheme">fb283250972821458</string>
+
+
 </resources>

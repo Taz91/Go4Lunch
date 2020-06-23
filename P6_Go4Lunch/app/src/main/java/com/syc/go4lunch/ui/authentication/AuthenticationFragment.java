@@ -3,7 +3,6 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.syc.go4lunch.MainActivity;
 import com.syc.go4lunch.R;
 import androidx.lifecycle.Observer;
@@ -28,6 +27,10 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 import static android.app.Activity.RESULT_OK;
+import static com.syc.go4lunch.utils.Utils.checkConnection;
+
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 public class AuthenticationFragment extends Fragment implements EasyPermissions.PermissionCallbacks {
 
@@ -62,7 +65,6 @@ public class AuthenticationFragment extends Fragment implements EasyPermissions.
             }
         });
 
-        startConnect();
         return root;
     }
 
@@ -71,6 +73,14 @@ public class AuthenticationFragment extends Fragment implements EasyPermissions.
         super.onActivityCreated(savedInstanceState);
         authenticationViewModel = new ViewModelProvider(this).get(AuthenticationViewModel.class);
         // TODO: Use the ViewModel
+
+
+        if(checkConnection(getActivity())){
+            startConnect();
+        }else{
+            authentication_message.setText("Connection failed !!");
+        }
+
     }
 
     @Override
@@ -123,13 +133,15 @@ public class AuthenticationFragment extends Fragment implements EasyPermissions.
      */
     public void startConnect(){
 
+        checkConnection(getActivity());
+
         permissionGranted();
 
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build()
                 // ,new AuthUI.IdpConfig.PhoneBuilder().build()
                 ,new AuthUI.IdpConfig.GoogleBuilder().build()
-                // ,new AuthUI.IdpConfig.FacebookBuilder().build()
+                //,new AuthUI.IdpConfig.FacebookBuilder().build()
                 // ,new AuthUI.IdpConfig.TwitterBuilder().build()
                  );
 
@@ -137,6 +149,9 @@ public class AuthenticationFragment extends Fragment implements EasyPermissions.
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
+                        .setIsSmartLockEnabled(true)
+                        .setLogo(R.drawable.go4lunch_icon)
+                        .setTheme(R.style.LoginTheme)
                         .build(),
                 RC_SIGN_IN);
         /*
@@ -161,7 +176,7 @@ public class AuthenticationFragment extends Fragment implements EasyPermissions.
     public void permissionGranted(){
         String[] perms = {Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET};
         if(EasyPermissions.hasPermissions(getContext(),perms)){
-            Toast.makeText(getContext(), "y a le droit ?",Toast.LENGTH_LONG).show();;
+            Toast.makeText(getContext(), "y a le droit ?",Toast.LENGTH_LONG).show();
         }else{
             EasyPermissions.requestPermissions(this,"besoin d'accorder une permission !!", RC_PERMS_IN, perms );
         }

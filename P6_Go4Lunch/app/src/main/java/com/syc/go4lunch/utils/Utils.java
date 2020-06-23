@@ -2,6 +2,8 @@ package com.syc.go4lunch.utils;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -9,10 +11,14 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.net.ConnectivityManagerCompat;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
+
+import static androidx.core.content.ContextCompat.getSystemService;
 
 public class Utils {
 
@@ -137,6 +143,20 @@ public class Utils {
                 ;
         manager.notify(1, builder.build());
     }
+
+    public static boolean checkConnection(Context context){
+        // Manual check internet conn. on activity start
+        ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 
 
 }
