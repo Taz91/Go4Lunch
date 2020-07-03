@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.stats.StatsEvent;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,11 +33,15 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.syc.go4lunch.BuildConfig;
 import com.syc.go4lunch.MainActivity;
 import com.syc.go4lunch.R;
+import com.syc.go4lunch.model.RestaurantModel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
+import java.util.stream.IntStream;
+
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 //implements ConnectionCallbacks, OnConnectionFailedListener
@@ -90,22 +95,96 @@ public class SlideshowFragment extends Fragment {
             //sx https://developers.google.com/places/android-sdk/current-place
             // Use fields to define the data types to return.
             //List<Place.Field> placeFields = Collections.singletonList(Place.Field.NAME);
-            List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.TYPES, Place.Field.PRICE_LEVEL, Place.Field.RATING );
+            List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.TYPES, Place.Field.PRICE_LEVEL, Place.Field.RATING, Place.Field.LAT_LNG );
 
             // Use the builder to create a FindCurrentPlaceRequest.
-            FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
-            //FindCurrentPlaceRequest requestk = FindCurrentPlaceRequest.builder(placeFields).build();
+            //FindCurrentPlaceRequest requestk = FindCurrentPlaceRequest.newInstance(placeFields);
+            FindCurrentPlaceRequest request = FindCurrentPlaceRequest.builder(placeFields).build();
 
             // Call findCurrentPlace and handle the response (first check that the user has granted permission).
+            if (ContextCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                placesClient.findCurrentPlace(request).addOnSuccessListener(
+                        ((response) -> {
+                                            List<RestaurantModel> restaurantList = new ArrayList<>();
+                                            for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
+                                                if(placeLikelihood.getPlace().getTypes() != null ){
+                                                    for (Place.Type type : placeLikelihood.getPlace().getTypes() ) {
+                                                        if(type == Place.Type.RESTAURANT){
+                                                            restaurantList.add(new RestaurantModel(placeLikelihood.getPlace().getAddress(),
+                                                                                                    placeLikelihood.getPlace().getName(),
+                                                                                                    placeLikelihood.getPlace().getRating() != null ? placeLikelihood.getPlace().getRating(): 0,
+                                                                                                    placeLikelihood.getPlace().getLatLng()));
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                        )
+
+                ).addOnFailureListener((exception) -> {
+                    if (exception instanceof ApiException) {
+                        ApiException apiException = (ApiException) exception;
+                        Log.e(TAG, "Place not found: " + apiException.getStatusCode());
+                    }
+                });
+            } else {
+                // A local method to request required permissions;
+                // See https://developer.android.com/training/permissions/requesting
+                getLocationPermission();
+            }
+
+            // Call findCurrentPlace and handle the response (first check that the user has granted permission).
+            /*
             if (ContextCompat.checkSelfPermission(this.getContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
 
                 placeResponse.addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
+            */
+                        // ===========================================================================================================
+                        // exemple google : https://developers.google.com/maps/documentation/android-sdk/current-place-tutorial
+                        //
+                        //
+                        // init var à récupérer ...
 
+                        /*
+                        PlaceLikelihood{
+                            place=
+                                    Place{
+                                        address=Parc du Champ-de-Mars, 75007 Paris, France,
+                                        addressComponents=null,
+                                        businessStatus=null,
+                                        attributions=null,
+                                        id=null,
+                                        latLng=null,
+                                        name=Tour eiffel,
+                                        openingHours=null,
+                                        phoneNumber=null,
+                                        photoMetadatas=null,
+                                        plusCode=null,
+                                        priceLevel=null,
+                                        rating=4.6,
+                                        types=[	MUSEUM, POINT_OF_INTEREST, ESTABLISHMENT],
+                                        userRatingsTotal=null,
+                                        utcOffsetMinutes=null,
+                                        viewport=null,
+                                        websiteUri=null},
+                            likelihood=0.2020877647399902}
+                         */
+                        // ===========================================================================================================
+            /*
                         FindCurrentPlaceResponse response = task.getResult();
+
+                        String type = "";
+                        List<RestaurantModel> restaurantList = new ArrayList<>();
+
                         for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
                             Log.i(TAG, String.format("Place '%s' has likelihood: %f",placeLikelihood.getPlace().getName(), placeLikelihood.getLikelihood()));
+                            //ici on devrait charger le modèle !!!!!!!
+
+                            if(placeLikelihood.getPlace().getTypes() != null && placeLikelihood.getPlace().getTypes().contains("RESTAURANT") ){
+                                restaurantList.add(new RestaurantModel(placeLikelihood.getPlace().getAddress(), placeLikelihood.getPlace().getName(), placeLikelihood.getPlace().getRating() ));
+                            }
                         }
                     } else {
                         Exception exception = task.getException();
@@ -120,9 +199,8 @@ public class SlideshowFragment extends Fragment {
                 // See https://developer.android.com/training/permissions/requesting
                 getLocationPermission();
             }
+            */
 
-            // Get the current location of the device and set the position of the map.
-            //getDeviceLocation();
         }
         return root;
     }

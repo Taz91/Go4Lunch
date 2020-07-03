@@ -141,7 +141,7 @@ public class AuthenticationFragment extends Fragment implements EasyPermissions.
                 new AuthUI.IdpConfig.EmailBuilder().build()
                 // ,new AuthUI.IdpConfig.PhoneBuilder().build()
                 ,new AuthUI.IdpConfig.GoogleBuilder().build()
-                //,new AuthUI.IdpConfig.FacebookBuilder().build()
+                ,new AuthUI.IdpConfig.FacebookBuilder().build()
                 // ,new AuthUI.IdpConfig.TwitterBuilder().build()
                  );
 
@@ -154,22 +154,7 @@ public class AuthenticationFragment extends Fragment implements EasyPermissions.
                         .setTheme(R.style.LoginTheme)
                         .build(),
                 RC_SIGN_IN);
-        /*
-        //mAuth = FirebaseAuth.getInstance();
-        //FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        if (currentUser != null ){
-            String idUser = currentUser.getUid();
-            openMainActivity();
-        }else {
-            startActivityForResult(
-                    AuthUI.getInstance()
-                            .createSignInIntentBuilder()
-                            .setAvailableProviders(providers)
-                            .build(),
-                    RC_SIGN_IN);
-        }
-        */
     }
 
     @AfterPermissionGranted(RC_PERMS_IN)

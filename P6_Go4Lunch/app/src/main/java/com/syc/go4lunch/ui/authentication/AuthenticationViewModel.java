@@ -1,5 +1,4 @@
 package com.syc.go4lunch.ui.authentication;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

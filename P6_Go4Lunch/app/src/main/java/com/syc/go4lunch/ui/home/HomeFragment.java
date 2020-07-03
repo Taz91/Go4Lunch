@@ -11,11 +11,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.syc.go4lunch.R;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +33,10 @@ import butterknife.ButterKnife;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-import static com.firebase.ui.auth.AuthUI.getApplicationContext;
-
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
+    @BindView(R.id.home_login_text) TextView loginTexthome;
+    @BindView(R.id.home_buttonLocation) FloatingActionButton buttonLocation;
+
     private HomeViewModel homeViewModel;
     private GoogleMap mMap;
     // FOR GPS PERMISSION
@@ -42,9 +45,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback GPSLocationCallback;
-
-    @BindView(R.id.login_texthome) TextView loginTexthome;
-
 
     //FOR DATA // 1 - Identifier for Sign-In Activity
     private static final int RC_SIGN_IN = 123;
@@ -62,8 +62,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_home);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.home_map);
         mapFragment.getMapAsync((OnMapReadyCallback) this);
+
+        buttonLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fetchLastKnowLocation();
+                v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+            }
+        });
+
 
         return root;
     }
@@ -72,29 +81,21 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // with GoogleMap
-        // LocationRequest locationRequest = new LocationRequest().setInterval(10000).setFastestInterval(5000).setSmallestDisplacement(50).setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(5000);
-        locationRequest.setSmallestDisplacement(50);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        GPSLocationCallback = new LocationCallback(){
+        GPSLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 //super.onLocationResult(locationResult);
-                Location lastLocation = locationResult.getLocations().get(locationResult.getLocations().size());
-                Toast.makeText( getContext(),"Vous êtes ici: " + lastLocation.getLatitude() + " / " + lastLocation.getLatitude() + " (Nb locs : " + locationResult.getLocations().size() + " ) " , Toast.LENGTH_LONG).show();
+                Location lastLocation = locationResult.getLocations().get(locationResult.getLocations().size()-1);
+                Toast.makeText(getContext(), "Vous êtes ici: " + lastLocation.getLatitude() + " / " + lastLocation.getLatitude() + " (Nb locs : " + locationResult.getLocations().size() + " ) ", Toast.LENGTH_LONG).show();
             }
         };
+
 
         //updateLocationUI();
 
         fetchLastKnowLocation();
 
-
-
+        /*
         LatLng chatelet = new LatLng(48.86, 2.34);
         mMap.addMarker( new MarkerOptions()
                 .position(chatelet)
@@ -107,14 +108,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 .title("Syc in Jardin Luxembour")
                 .draggable(true)
         );
-
         mMap.moveCamera(CameraUpdateFactory.newLatLng(chatelet));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(jardinLux));
-
         // Set a preference for minimum and maximum zoom.
         mMap.setMinZoomPreference(6.0f);
         mMap.setMaxZoomPreference(14.0f);
-
+        */
     }
 
     private void getLocationPermission() {
@@ -136,7 +135,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         }
         */
     }
-
 
     // --------------------
     // Permission Granted, initiate map
@@ -174,29 +172,28 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             return;
         }
 
-        //fusedLocationClient  = LocationServices.getFusedLocationProviderClient(requireContext());
         fusedLocationClient  = LocationServices.getFusedLocationProviderClient(requireContext());
+        LocationRequest locationRequest = new LocationRequest().setInterval(10000).setFastestInterval(5000).setSmallestDisplacement(50).setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        fusedLocationClient.requestLocationUpdates(locationRequest, GPSLocationCallback,null);
 
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        LatLng myLocation;
-                        if (location != null) {
-                            myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                        } else {
-                            myLocation = new LatLng(48.5131, 2.1739);
-                        }
-                        //LatLng jardinLux = new LatLng(48.84, 2.337);
-                        mMap.addMarker( new MarkerOptions()
-                                .position(myLocation)
-                                .title("Syc in tour effel or savigny")
-                                .draggable(true)
-                        );
-
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
-                    }
-                });
+        fusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                LatLng myLocation;
+                if (location != null) {
+                    myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                } else {
+                    myLocation = new LatLng(48.5131, 2.1739);
+                }
+                //LatLng jardinLux = new LatLng(48.84, 2.337);
+                mMap.addMarker( new MarkerOptions()
+                        .position(myLocation)
+                        .title("Syc in tour effel or savigny")
+                        .draggable(true)
+                );
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15.0f));
+            }
+        });
 
     }
 

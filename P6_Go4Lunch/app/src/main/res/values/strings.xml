@@ -11,6 +11,10 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
 
+    <string name="bottom_view_map">view_map</string>
+    <string name="bottom_view_list">view_list</string>
+    <string name="bottom_workmates">workmates</string>
+
     <string name="home_second">Home Second</string>
     <string name="title_activity_nav">NavActivity</string>
     <string name="title_activity_maps">Map</string>
@@ -23,7 +27,7 @@
     <string name="need_permission_message">"Application need permission "</string>
 
 
-    <string name="facebook_app_id">283250972821458</string>
+    <string name="facebook_application_id">283250972821458</string>
     <string name="fb_login_protocol_scheme">fb283250972821458</string>
 
 
