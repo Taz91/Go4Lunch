@@ -28,20 +28,14 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
-import com.syc.go4lunch.BuildConfig;
 import com.syc.go4lunch.MainActivity;
 import com.syc.go4lunch.R;
 import com.syc.go4lunch.model.RestaurantModel;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
-import java.util.stream.IntStream;
-
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 //implements ConnectionCallbacks, OnConnectionFailedListener

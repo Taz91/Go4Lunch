@@ -7,7 +7,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
+import com.syc.go4lunch.ui.home.HomeViewModel;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -21,10 +23,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private AppBarConfiguration mAppBarConfiguration;
     private GoogleMap mMap;
 
+    private HomeViewModel homeViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         // ====================================== ConfigureUI
         configureUI();
