@@ -29,9 +29,6 @@ import pub.devrel.easypermissions.EasyPermissions;
 import static android.app.Activity.RESULT_OK;
 import static com.syc.go4lunch.utils.Utils.checkConnection;
 
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
-
 public class AuthenticationFragment extends Fragment implements EasyPermissions.PermissionCallbacks {
 
     private AuthenticationViewModel authenticationViewModel;

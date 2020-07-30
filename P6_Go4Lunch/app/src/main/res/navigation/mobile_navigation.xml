@@ -47,4 +47,10 @@
         android:label="@string/menu_map"
         tools:layout="@layout/fragment_maps" />
 
+    <fragment
+        android:id="@+id/nav_slideshow_s"
+        android:name="com.syc.go4lunch.ui.map.MapsFragment"
+        android:label="@string/menu_map"
+        tools:layout="@layout/fragment_maps" />
+
 </navigation>

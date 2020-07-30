@@ -1,6 +1,4 @@
 package com.syc.go4lunch.model;
-
-
 import com.google.android.gms.maps.model.LatLng;
 
 public class RestaurantModel {

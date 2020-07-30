@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        mAppBarConfiguration = new AppBarConfiguration.Builder( R.id.nav_home, R.id.nav_gallery, R.id.nav_maps, R.id.nav_slideshow)
+        mAppBarConfiguration = new AppBarConfiguration.Builder( R.id.nav_home, R.id.nav_gallery, R.id.nav_maps, R.id.nav_slideshow, R.id.nav_slideshow_s)
                 .setDrawerLayout(drawer)
                 .build();
     }
